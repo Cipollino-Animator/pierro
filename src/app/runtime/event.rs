@@ -1,8 +1,8 @@
 
 use glutin::surface::GlSurface;
-use winit::{event::{Event, WindowEvent}, event_loop::ControlFlow};
+use winit::{dpi::PhysicalPosition, event::{Event, WindowEvent}, event_loop::ControlFlow};
 
-use crate::pos;
+use crate::{pos, vec2};
 
 use super::Runtime;
 
@@ -34,6 +34,13 @@ impl<S: 'static> Runtime<S> {
                     _ => {}
                 };
                 self.rerender_again = true;
+            },
+            WindowEvent::MouseWheel { delta, .. } => {
+                let line_scale = scl * 20.0;
+                self.input.scroll = match delta {
+                    winit::event::MouseScrollDelta::LineDelta(x, y) => vec2(x * line_scale, y * line_scale),
+                    winit::event::MouseScrollDelta::PixelDelta(PhysicalPosition {x, y}) => vec2(x as f32 / scl, y as f32 / scl),
+                };
             },
             WindowEvent::CloseRequested => {
                 *control_flow = ControlFlow::Exit

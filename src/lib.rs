@@ -1,6 +1,6 @@
 
 mod math;
-pub use math::{vec::{Vec2, vec2, Pos, pos}, rect::Rect, color::{Color, color}};
+pub use math::{vec::{Vec2, vec2, Pos, pos, Axis}, rect::Rect, color::{Color, color}};
 
 pub mod app;
 pub mod widget;

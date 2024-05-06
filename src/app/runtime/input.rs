@@ -1,11 +1,12 @@
 
-use crate::{widget::response::EdgedInput, LayoutNode, Pos, Response, WidgetNode, WidgetState};
+use crate::{widget::response::EdgedInput, LayoutNode, Pos, Response, Vec2, WidgetState};
 
 // Contains all the raw input to the app 
 pub(super) struct Input {
     pub mouse_pos: Option<Pos>,
     pub left_mouse_button: EdgedInput,
-    pub right_mouse_button: EdgedInput
+    pub right_mouse_button: EdgedInput,
+    pub scroll: Vec2
 }
 
 impl Input {
@@ -14,7 +15,8 @@ impl Input {
         Self {
             mouse_pos: None,
             left_mouse_button: EdgedInput::new(),
-            right_mouse_button: EdgedInput::new() 
+            right_mouse_button: EdgedInput::new(),
+            scroll: Vec2::ZERO
         }
     }
 
@@ -23,6 +25,7 @@ impl Input {
             hover_pos: self.mouse_pos,
             left_mouse_button: self.left_mouse_button,
             right_mouse_button: self.right_mouse_button,
+            scroll: self.scroll,
             global_hover_pos: self.mouse_pos,
             global_left_mouse_button: self.left_mouse_button,
             global_right_mouse_button: self.right_mouse_button 
@@ -59,6 +62,7 @@ struct WidgetInput {
     hover_pos: Option<Pos>,
     left_mouse_button: EdgedInput, 
     right_mouse_button: EdgedInput, 
+    scroll: Vec2,
 
     global_hover_pos: Option<Pos>,
     global_left_mouse_button: EdgedInput,
@@ -77,7 +81,10 @@ impl WidgetInput {
         response.hover_pos = Some(hover_pos);
         response.left_mouse_button = self.left_mouse_button; 
         response.right_mouse_button = self.right_mouse_button; 
+        response.scroll = self.scroll;
+
         self.hover_pos = None;
+        self.scroll = Vec2::ZERO;
     }
 
     fn distribute_to_node<S>(&mut self, node: &LayoutNode<S>) {

@@ -39,4 +39,8 @@ impl Color {
         }
     }
 
+    pub fn darken(&self, t: f32) -> Self {
+        self.lerp(Self::BLACK, t)
+    }
+
 }

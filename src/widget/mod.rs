@@ -13,6 +13,7 @@ pub mod dropdown;
 pub mod margin;
 pub mod center;
 pub mod column;
+pub mod scroll_area;
 
 use std::{any::{Any, TypeId}, rc::Rc};
 
@@ -94,12 +95,17 @@ pub trait Widget<S> {
 
     } 
 
+    fn post_draw(&self, _painter: &mut Painter, _rect: Rect, _resp: &Response, _state: &mut WidgetState<S>) {
+
+    } 
+
 }
 
 pub(crate) trait WidgetDyn<S> {
 
     fn layout(&self, max_size: Vec2, ctx: &mut LayoutContext, state: &mut WidgetState<S>) -> LayoutResult<S>;
     fn draw(&self, painter: &mut Painter, rect: Rect, resp: &Response, state: &mut WidgetState<S>);
+    fn post_draw(&self, painter: &mut Painter, rect: Rect, resp: &Response, state: &mut WidgetState<S>);
 
 }
 
@@ -111,6 +117,10 @@ impl<S, W> WidgetDyn<S> for W where W: Widget<S> {
 
     fn draw(&self, painter: &mut Painter, rect: Rect, resp: &Response, state: &mut WidgetState<S>) {
         self.draw(painter, rect, resp, state)
+    }
+
+    fn post_draw(&self, painter: &mut Painter, rect: Rect, resp: &Response, state: &mut WidgetState<S>) {
+        self.post_draw(painter, rect, resp, state);
     }
 
 }

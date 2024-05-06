@@ -1,5 +1,5 @@
 
-use crate::Pos;
+use crate::{Pos, Vec2};
 
 #[derive(Clone, Copy)]
 pub struct EdgedInput {
@@ -42,6 +42,7 @@ pub struct Response {
     pub(crate) hover_pos: Option<Pos>,
     pub(crate) left_mouse_button: EdgedInput, 
     pub(crate) right_mouse_button: EdgedInput, 
+    pub(crate) scroll: Vec2,
 
     pub(crate) global_hover_pos: Option<Pos>,
     pub(crate) global_left_mouse_button: EdgedInput, 
@@ -55,6 +56,7 @@ impl Response {
             hover_pos: None,
             left_mouse_button: EdgedInput::new(), 
             right_mouse_button: EdgedInput::new(),
+            scroll: Vec2::ZERO,
 
             global_hover_pos: None,
             global_left_mouse_button: EdgedInput::new(), 
@@ -76,6 +78,10 @@ impl Response {
     
     pub fn mouse_down(&self) -> bool {
         self.left_mouse_button.down()
+    }
+
+    pub fn scroll(&self) -> Vec2 {
+        self.scroll
     }
 
     pub fn clicked_elsewhere(&self) -> bool {

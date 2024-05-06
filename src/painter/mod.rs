@@ -50,7 +50,8 @@ pub struct Painter<'a> {
     canvas: &'a mut Canvas<OpenGl>,
     pub theme: &'a Theme,
     text_paint: Paint,
-    scl: f32
+    scl: f32,
+    clip_rects: Vec<Rect>
 }
 
 fn to_color(color: Color) -> femtovg::Color {
@@ -106,7 +107,8 @@ impl<'a> Painter<'a> {
             canvas,
             theme,
             text_paint,
-            scl 
+            scl,
+            clip_rects: Vec::new()
         }
     }
 
@@ -133,5 +135,20 @@ impl<'a> Painter<'a> {
         self.text_paint.set_font_size(font_size * self.scl);
         let _ = self.canvas.fill_text(pos.x * self.scl, pos.y * self.scl, text, &self.text_paint);
     } 
+
+    fn set_clip_rect(&mut self, rect: Rect) {
+        self.canvas.scissor(rect.left() * self.scl, rect.top() * self.scl, rect.width() * self.scl, rect.height() * self.scl);
+    }
+
+    pub fn push_clip_rect(&mut self, rect: Rect) {
+        self.clip_rects.push(rect);
+        self.set_clip_rect(rect);
+    }
+
+    pub fn pop_clip_rect(&mut self) {
+        self.clip_rects.pop();
+        let rect = *self.clip_rects.last().expect("popped too many times.");
+        self.set_clip_rect(rect);
+    }
 
 }

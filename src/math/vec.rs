@@ -1,5 +1,28 @@
 use std::ops::{Add, AddAssign, Deref, DerefMut, Div, Mul, Sub};
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Axis {
+    X,
+    Y
+}
+
+impl Axis {
+
+    pub fn unit(&self) -> Vec2 {
+        match self {
+            Axis::X => Vec2::X,
+            Axis::Y => Vec2::Y,
+        }
+    }
+
+    pub fn other(&self) -> Self {
+        match self {
+            Axis::X => Axis::Y,
+            Axis::Y => Axis::X,
+        }
+    }
+
+}
 
 #[derive(Clone, Copy, Debug)]
 pub struct Vec2 {
@@ -17,6 +40,8 @@ pub const fn vec2(x: f32, y: f32) -> Vec2 {
 impl Vec2 {
 
     pub const ZERO: Self = Self::splat(0.0);
+    pub const X: Self = vec2(1.0, 0.0);
+    pub const Y: Self = vec2(0.0, 1.0);
 
     pub const fn splat(val: f32) -> Vec2 {
         vec2(val, val)
@@ -38,6 +63,20 @@ impl Vec2 {
 
     pub fn length(&self) -> f32 {
         (self.x * self.x + self.y * self.y).sqrt()
+    }
+
+    pub fn axis(&self, axis: Axis) -> f32 {
+        match axis {
+            Axis::X => self.x,
+            Axis::Y => self.y,
+        }
+    } 
+
+    pub fn axis_mut(&mut self, axis: Axis) -> &mut f32 {
+        match axis {
+            Axis::X => &mut self.x,
+            Axis::Y => &mut self.y,
+        }
     }
 
 }

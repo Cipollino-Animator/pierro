@@ -164,7 +164,9 @@ impl<S: 'static> Runtime<S> {
 
         // Render widget tree
         let mut painter = Painter::new(&mut self.canvas, &theme, &fonts, scl);
-        painter.rect(RectBuilder::new(Rect::min_size(Pos::ZERO, vec2(width as f32 / scl, height as f32 / scl))).fill(theme.bg_dark));
+        let fullscreen_rect = Rect::min_size(Pos::ZERO, vec2(width as f32 / scl, height as f32 / scl));
+        painter.push_clip_rect(fullscreen_rect);
+        painter.rect(RectBuilder::new(fullscreen_rect).fill(theme.bg_dark));
         let mut messages = Vec::new();
         for (path, root) in layer_roots {
             let mut state = &mut self.widget_state;

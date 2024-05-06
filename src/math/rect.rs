@@ -1,5 +1,5 @@
 
-use crate::{pos, Pos, Vec2};
+use crate::{pos, Axis, Pos, Vec2};
 
 #[derive(Clone, Copy)]
 pub struct Rect {
@@ -87,6 +87,10 @@ impl Rect {
 
     pub fn shift(&self, offset: Vec2) -> Self {
         Self::new(self.min + offset, self.max + offset)
+    }
+
+    pub fn dimension(&self, axis: Axis) -> f32 {
+        self.size().axis(axis)
     }
 
 }
