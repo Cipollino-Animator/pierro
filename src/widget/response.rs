@@ -39,6 +39,7 @@ impl EdgedInput {
 }
 
 pub struct Response {
+    pub(crate) sensor_idx: Option<usize>,
     pub(crate) hover_pos: Option<Pos>,
     pub(crate) left_mouse_button: EdgedInput, 
     pub(crate) right_mouse_button: EdgedInput, 
@@ -53,6 +54,7 @@ impl Response {
 
     pub(super) fn new() -> Self {
         Self {
+            sensor_idx: None,
             hover_pos: None,
             left_mouse_button: EdgedInput::new(), 
             right_mouse_button: EdgedInput::new(),
@@ -62,6 +64,10 @@ impl Response {
             global_left_mouse_button: EdgedInput::new(), 
             global_right_mouse_button: EdgedInput::new()
         }
+    }
+
+    pub fn sensor_idx(&self) -> Option<usize> {
+        self.sensor_idx
     }
 
     pub fn hovered(&self) -> bool {

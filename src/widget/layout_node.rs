@@ -12,6 +12,7 @@ pub struct LayoutNode<'ui, S> {
     pub(crate) widget: &'ui WidgetNode<S>,
     pub(crate) children: Vec<(Vec2, LayoutNode<'ui, S>)>,
     pub(crate) popovers: Vec<(Vec2, LayoutNode<'ui, S>)>,
+    pub(crate) sensors: Vec<(Vec2, Vec2)>,
 
     // Stage 2: Input Handling
     pub(crate) response: RefCell<Response>
@@ -20,13 +21,21 @@ pub struct LayoutNode<'ui, S> {
 
 impl<'ui, S> LayoutNode<'ui, S> {
 
-    pub(crate) fn new(local_id: usize, size: Vec2, widget: &'ui WidgetNode<S>, children: Vec<(Vec2, LayoutNode<'ui, S>)>, popovers: Vec<(Vec2, LayoutNode<'ui, S>)>) -> Self {
+    pub(crate) fn new(
+        local_id: usize,
+        size: Vec2,
+        widget: &'ui WidgetNode<S>,
+        children: Vec<(Vec2, LayoutNode<'ui, S>)>,
+        popovers: Vec<(Vec2, LayoutNode<'ui, S>)>,
+        sensors: Vec<(Vec2, Vec2)>
+    ) -> Self {
         Self {
             local_id,
             rect: Rect::min_size(Pos::ZERO, size),
             widget,
             children,
             popovers,
+            sensors,
             response: RefCell::new(Response::new())
         }
     }

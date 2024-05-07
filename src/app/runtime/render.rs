@@ -175,6 +175,7 @@ impl<S: 'static> Runtime<S> {
             }
             render_node(&mut painter, &root, &mut messages, state);
         }
+        self.window.set_cursor_icon(painter.cursor.to_winit_cursor());
 
         // Update focus
         update_focus(&mut self.widget_state);

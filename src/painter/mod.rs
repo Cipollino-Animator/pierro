@@ -5,6 +5,10 @@ use femtovg::{renderer::OpenGl, Canvas, FontId, Paint, Path};
 
 use crate::{theme::Theme, vec2, Color, Pos, Rect, Vec2};
 
+use self::cursor::Cursor;
+
+pub mod cursor;
+
 pub struct TextShaper<'a> {
     canvas: RefCell<&'a mut Canvas<OpenGl>>,
     text_paint: RefCell<Paint>,
@@ -51,7 +55,8 @@ pub struct Painter<'a> {
     pub theme: &'a Theme,
     text_paint: Paint,
     scl: f32,
-    clip_rects: Vec<Rect>
+    clip_rects: Vec<Rect>,
+    pub cursor: Cursor
 }
 
 fn to_color(color: Color) -> femtovg::Color {
@@ -108,7 +113,8 @@ impl<'a> Painter<'a> {
             theme,
             text_paint,
             scl,
-            clip_rects: Vec::new()
+            clip_rects: Vec::new(),
+            cursor: Cursor::Default
         }
     }
 

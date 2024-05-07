@@ -1,5 +1,5 @@
 
-use crate::{widget::response::EdgedInput, LayoutNode, Pos, Response, Vec2, WidgetState};
+use crate::{widget::response::EdgedInput, LayoutNode, Pos, Rect, Response, Vec2, WidgetState};
 
 // Contains all the raw input to the app 
 pub(super) struct Input {
@@ -77,7 +77,8 @@ impl WidgetInput {
         response.global_right_mouse_button = self.global_right_mouse_button;
     }
 
-    fn distribute_active_input(&mut self, response: &mut Response, hover_pos: Pos) {
+    fn distribute_active_input(&mut self, response: &mut Response, hover_pos: Pos, sensor_idx: Option<usize>) {
+        response.sensor_idx = sensor_idx;
         response.hover_pos = Some(hover_pos);
         response.left_mouse_button = self.left_mouse_button; 
         response.right_mouse_button = self.right_mouse_button; 
@@ -88,19 +89,29 @@ impl WidgetInput {
     }
 
     fn distribute_to_node<S>(&mut self, node: &LayoutNode<S>) {
+        let response = &mut *node.response.borrow_mut();
+        self.distribute_global_input(response);
+
         for (_, popover) in &node.popovers {
             self.distribute_to_node(popover);
         }
+
+        if let Some(hover_pos) = self.hover_pos {
+            for (idx, (offset, size)) in node.sensors.iter().enumerate() {
+                let rect = Rect::min_size(node.rect.min() + *offset, *size);
+                if rect.contains(hover_pos) {
+                    self.distribute_active_input(response, hover_pos, Some(idx));
+                }
+            }
+        }
+
         for (_, child) in &node.children {
             self.distribute_to_node(child);
         }
 
-        let response = &mut *node.response.borrow_mut();
-        self.distribute_global_input(response);
-
         if let Some(hover_pos) = self.hover_pos {
             if node.rect.contains(hover_pos) && node.widget.sense_click {
-                self.distribute_active_input(response, hover_pos);
+                self.distribute_active_input(response, hover_pos, None);
             }
         }
     }
@@ -117,7 +128,7 @@ impl WidgetInput {
         self.distribute_global_input(response);
         if state.focused {
             if let Some(hover_pos) = self.hover_pos {
-                self.distribute_active_input(response, hover_pos);
+                self.distribute_active_input(response, hover_pos, None);
             }
         }
     }

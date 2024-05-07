@@ -1,4 +1,4 @@
-use std::ops::{Add, AddAssign, Deref, DerefMut, Div, Mul, Sub};
+use std::ops::{Add, AddAssign, Deref, DerefMut, Div, Mul, Sub, SubAssign};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Axis {
@@ -153,6 +153,21 @@ impl Pos {
         self.0
     }
 
+    pub fn with_x(&self, x: f32) -> Self {
+        pos(x, self.y)
+    }
+
+    pub fn with_y(&self, y: f32) -> Self {
+        pos(self.x, y)
+    }
+
+    pub fn with_axis(&self, axis: Axis, pos: f32) -> Self {
+        match axis {
+            Axis::X => self.with_x(pos),
+            Axis::Y => self.with_y(pos)
+        } 
+    }
+
 }
 
 impl Add<Vec2> for Pos {
@@ -164,12 +179,28 @@ impl Add<Vec2> for Pos {
 
 }
 
+impl AddAssign<Vec2> for Pos {
+
+    fn add_assign(&mut self, rhs: Vec2) {
+        *self = *self + rhs;
+    }
+
+}
+
 impl Sub<Vec2> for Pos {
     type Output = Pos;
 
     fn sub(self, rhs: Vec2) -> Self::Output {
         Pos(self.0 - rhs)
     }
+}
+
+impl SubAssign<Vec2> for Pos {
+
+    fn sub_assign(&mut self, rhs: Vec2) {
+        *self = *self - rhs;
+    }
+
 }
 
 impl Sub<Pos> for Pos {

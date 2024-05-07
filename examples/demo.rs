@@ -28,7 +28,6 @@ impl<S> Widget<S> for Companion<S> {
 pub fn main() {
 
     pierro::app::App::new(color(1.0, 0.5, 1.0, 1.0), |state| {
-
         let mut scroll_list = Vec::new();
         for i in 0..100 {
             scroll_list.push(Text::new(format!("Hello World! {}", i + 1)));

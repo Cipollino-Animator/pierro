@@ -55,8 +55,8 @@ impl<S> WidgetNode<S> {
             window_size: ctx.window_size
         };
 
-        let LayoutResult {size, children, popovers} = self.widget.layout(max_size, &mut child_ctx, state.get_child(local_id));
-        LayoutNode::new(local_id, size, self, children, popovers)
+        let LayoutResult {size, children, popovers, sensors} = self.widget.layout(max_size, &mut child_ctx, state.get_child(local_id));
+        LayoutNode::new(local_id, size, self, children, popovers, sensors)
     }
 
     pub fn layout_popover(&self, ctx: &mut LayoutContext, state: &mut WidgetState<S>) -> LayoutNode<S> {

@@ -13,6 +13,7 @@ pub mod dropdown;
 pub mod margin;
 pub mod center;
 pub mod column;
+pub mod split;
 pub mod scroll_area;
 
 use std::{any::{Any, TypeId}, rc::Rc};
@@ -52,7 +53,8 @@ pub struct LayoutContext<'a> {
 pub struct LayoutResult<'ui, S> {
     pub size: Vec2,
     children: Vec<(Vec2, LayoutNode<'ui, S>)>,
-    popovers: Vec<(Vec2, LayoutNode<'ui, S>)>
+    popovers: Vec<(Vec2, LayoutNode<'ui, S>)>,
+    sensors: Vec<(Vec2, Vec2)>
 }
 
 impl<'ui, S> LayoutResult<'ui, S> {
@@ -61,7 +63,8 @@ impl<'ui, S> LayoutResult<'ui, S> {
         Self {
             size,
             children: Vec::new(),
-            popovers: Vec::new()
+            popovers: Vec::new(),
+            sensors: Vec::new()
         }
     }
 
@@ -71,6 +74,10 @@ impl<'ui, S> LayoutResult<'ui, S> {
 
     pub fn add_popover(&mut self, offset: Vec2, popover: LayoutNode<'ui, S>) {
         self.popovers.push((offset, popover));
+    }
+    
+    pub fn add_sensor(&mut self, offset: Vec2, size: Vec2) {
+        self.sensors.push((offset, size));
     }
 
 }
